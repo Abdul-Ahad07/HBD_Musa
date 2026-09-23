@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Musa ✨</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fef6e4 0%, #f3d2c1 50%, #fef6e4 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #001e1d;
+        }
+
+        /* --- Start Screen --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(254, 246, 228, 0.95);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 999; transition: opacity 0.8s ease;
+        }
+        .start-card {
+            background: #ffffff;
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 380px;
+            width: 85%;
+            border: 1px solid #f3d2c1;
+        }
+        .start-card h2 {
+            font-size: 22px; color: #f25c54; margin-bottom: 10px; font-weight: 600;
+        }
+        .start-card p {
+            font-size: 14px; color: #666; margin-bottom: 22px;
+        }
+        .btn {
+            background: #f25c54; color: #fff; border: none;
+            padding: 12px 28px; border-radius: 20px; font-size: 15px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(242, 92, 84, 0.3);
+            transition: transform 0.2s ease;
+        }
+        .btn:active { transform: scale(0.95); }
+
+        /* --- Main Content --- */
+        #main-content {
+            opacity: 0; pointer-events: none; transition: opacity 1.2s ease;
+            width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center; position: relative;
+        }
+        #main-content.active { opacity: 1; pointer-events: auto; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 30px 15px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            width: 92%; max-width: 600px; min-height: 110px;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        #text-box {
+            font-size: 18px;
+            color: #2b2d42;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            white-space: nowrap; /* Strictly force single line */
+            width: 100%;
+            text-align: center;
+        }
+        #text-box.visible { opacity: 1; }
+
+        /* Floating Soft Elements */
+        .floating {
+            position: absolute; top: -10vh;
+            font-size: 20px; opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen">
+        <div class="start-card">
+            <h2>Happy Birthday Musa 🎈</h2>
+            <p>A soft & heartfelt message for you...</p>
+            <button class="btn" onclick="openWish()">Open Message ✨</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73180.mp3" preload="auto" loop></audio>
+        <div id="floating-container"></div>
+        <div class="card">
+            <div id="text-box"></div>
+        </div>
+    </div>
+
+    <script>
+        const lines = [
+            "Happy Birthday, Musa! 🎂✨",
+            "Wishing you endless happiness and joy today.",
+            "May your life be filled with peace and warmth.",
+            "You are a truly wonderful person.",
+            "Thank you for bringing positive energy always.",
+            "May all your dreams and goals come true.",
+            "Hope this year brings countless reasons to smile.",
+            "Always stay as kind and humble as you are.",
+            "Wishing you health, success, and prosperity!",
+            "Happiest Birthday once again, Musa! 🎉🤍"
+        ];
+
+        function openWish() {
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('start-screen').style.display = 'none', 800);
+            document.getElementById('main-content').classList.add('active');
+            
+            const music = document.getElementById('bg-music');
+            if(music) music.play().catch(e => console.log(e));
+
+            createElements();
+            showAnimation();
+        }
+
+        function createElements() {
+            const container = document.getElementById('floating-container');
+            const icons = ['✨', '🎈', '🤍', '🌸', '🎂', '⭐'];
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.classList.add('floating');
+                el.innerText = icons[Math.floor(Math.random() * icons.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                container.appendChild(el);
+                setTimeout(() => el.remove(), 8000);
+            }, 700);
+        }
+
+        let index = 0;
+        function showAnimation() {
+            const textBox = document.getElementById('text-box');
+            function nextLine() {
+                if (index < lines.length) {
+                    textBox.innerText = lines[index];
+                    
+                    // Auto-adjust font size dynamically to strictly fit single line on mobile
+                    let fontSize = window.innerWidth < 500 ? 16 : 20;
+                    textBox.style.fontSize = fontSize + 'px';
+                    
+                    while (textBox.scrollWidth > textBox.clientWidth && fontSize > 10) {
+                        fontSize--;
+                        textBox.style.fontSize = fontSize + 'px';
+                    }
+
+                    textBox.classList.add('visible');
+
+                    if (index === lines.length - 1) return;
+
+                    setTimeout(() => {
+                        textBox.classList.remove('visible');
+                        setTimeout(() => { index++; nextLine(); }, 1200);
+                    }, 3500);
+                }
+            }
+            nextLine();
+        }
+    </script>
+</body>
+</html>
+
